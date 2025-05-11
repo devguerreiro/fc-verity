@@ -17,7 +17,7 @@
       </div>
       <div class="shrink-0 space-x-2">
         <mat-icon aria-hidden="false" aria-label="Edit task" fontIcon="edit"
-          (click)="openEditTaskDialog(task.id, task.title, task.description)"></mat-icon>
+          (click)="openEditTaskDialog(task)"></mat-icon>
         <button (click)="taskService.deleteTask(task.id)">
           <mat-icon aria-hidden="false" aria-label="Delete task" fontIcon="delete" class="!text-red-500"></mat-icon>
         </button>
@@ -45,7 +45,7 @@
       </div>
       <div class="shrink-0 space-x-2">
         <mat-icon aria-hidden="false" aria-label="Edit task" fontIcon="edit"
-          (click)="openEditTaskDialog(task.id, task.title, task.description)"></mat-icon>
+          (click)="openEditTaskDialog(task)"></mat-icon>
         <button (click)="taskService.deleteTask(task.id)">
           <mat-icon aria-hidden="false" aria-label="Delete task" fontIcon="delete" class="!text-red-500"></mat-icon>
         </button>

@@ -17,14 +17,10 @@ export class ListTaskComponent {
 
   readonly dialog = inject(MatDialog);
 
-  openEditTaskDialog(id: number, title: string, description?: string): void {
+  openEditTaskDialog(task: Task): void {
     this.dialog.open(EditTaskDialogComponent, {
       width: '250px',
-      data: {
-        id,
-        title,
-        description,
-      },
+      data: task,
     });
   }
 

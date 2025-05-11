@@ -45,7 +45,7 @@ export class TaskService {
     this.tasks().splice(taskIndex, 1);
   }
 
-  editTask(id: number, data: Partial<Task>) {
+  editTask(id: number, data: Omit<Task, 'id'>) {
     this.httpClient
       .put<Task>(`${environment.apiUrl}/tasks/${id}`, data)
       .subscribe((task) => {

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -42,8 +42,12 @@ import { TaskService } from '../../../../services/task.service';
 export class EditTaskDialogComponent {
   readonly dialogRef = inject(MatDialogRef<EditTaskDialogComponent>);
 
-  readonly data: { id: number; title: string; description?: string } =
-    inject(MAT_DIALOG_DATA);
+  readonly data: {
+    id: number;
+    title: string;
+    description?: string;
+    completed: boolean;
+  } = inject(MAT_DIALOG_DATA);
 
   readonly taskService = inject(TaskService);
 
@@ -58,6 +62,7 @@ export class EditTaskDialogComponent {
       this.taskService.editTask(this.data.id, {
         title: title as string,
         description: description as string | undefined,
+        completed: this.data.completed,
       });
       this.dialogRef.close();
     }
