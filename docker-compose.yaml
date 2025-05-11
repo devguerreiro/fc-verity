@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: fc-verity
+    ports:
+      - "4200:4200"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true # Needed for file watching inside Docker
+      - API_URL=back
+    networks:
+      - verity
+    command: npm start
+
+networks:
+  verity:
+    name: bc-verity_verity
+    external: true
