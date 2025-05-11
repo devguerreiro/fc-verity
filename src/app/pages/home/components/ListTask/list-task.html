@@ -1,0 +1,17 @@
+<section class="space-y-4">
+  @for(task of taskService.tasks; track task.id) {
+  <div class="bg-white rounded shadow p-4 flex justify-between items-center gap-8">
+    <div class="flex flex-col gap-1 overflow-hidden">
+      <span class="font-medium text-ellipsis overflow-hidden">{{task.title}}</span>
+      <span class="text-xs text-ellipsis overflow-hidden">{{task.description}}</span>
+    </div>
+    <div class="shrink-0 space-x-2">
+      <mat-icon aria-hidden="false" aria-label="Edit task" fontIcon="edit"
+        (click)="openEditTaskDialog(task.id, task.title, task.description)"></mat-icon>
+      <button (click)="taskService.deleteTask(task.id)">
+        <mat-icon aria-hidden="false" aria-label="Delete task" fontIcon="delete" class="!text-red-500"></mat-icon>
+      </button>
+    </div>
+  </div>
+  }
+</section>

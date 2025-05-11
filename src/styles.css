@@ -1,1 +1,16 @@
 @import "tailwindcss";
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: #f1f1f1;
+}
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+}
