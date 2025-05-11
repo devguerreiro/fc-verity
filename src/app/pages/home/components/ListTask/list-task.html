@@ -1,17 +1,51 @@
-<section class="space-y-4">
-  @for(task of taskService.tasks; track task.id) {
-  <div class="bg-white rounded shadow p-4 flex justify-between items-center gap-8">
-    <div class="flex flex-col gap-1 overflow-hidden">
-      <span class="font-medium text-ellipsis overflow-hidden">{{task.title}}</span>
-      <span class="text-xs text-ellipsis overflow-hidden">{{task.description}}</span>
+<section class="space-y-8">
+  <section class="space-y-2">
+    <h2 class="font-medium">Pending Tasks</h2>
+    @for(task of taskService.getPendingTasks(); track task.id) {
+    <div class="bg-white rounded shadow p-4 flex justify-between items-center gap-8">
+      <div class="flex items-center gap-2">
+        <mat-checkbox class="example-margin" [checked]="task.completed"
+          (change)="taskService.editTask(task.id, {completed:!task.completed})" />
+        <div class="flex flex-col gap-1 overflow-hidden">
+          <span class="text-ellipsis overflow-hidden">{{task.title}}</span>
+          @if(task.description) {
+          <span class="text-xs text-ellipsis overflow-hidden">{{task.description}}</span>
+          }
+        </div>
+      </div>
+      <div class="shrink-0 space-x-2">
+        <mat-icon aria-hidden="false" aria-label="Edit task" fontIcon="edit"
+          (click)="openEditTaskDialog(task.id, task.title, task.description)"></mat-icon>
+        <button (click)="taskService.deleteTask(task.id)">
+          <mat-icon aria-hidden="false" aria-label="Delete task" fontIcon="delete" class="!text-red-500"></mat-icon>
+        </button>
+      </div>
     </div>
-    <div class="shrink-0 space-x-2">
-      <mat-icon aria-hidden="false" aria-label="Edit task" fontIcon="edit"
-        (click)="openEditTaskDialog(task.id, task.title, task.description)"></mat-icon>
-      <button (click)="taskService.deleteTask(task.id)">
-        <mat-icon aria-hidden="false" aria-label="Delete task" fontIcon="delete" class="!text-red-500"></mat-icon>
-      </button>
+    }
+  </section>
+  <hr />
+  <section class="space-y-2">
+    <h2 class="font-medium">Completed Tasks</h2>
+    @for(task of taskService.getCompletedTasks(); track task.id) {
+    <div class="rounded shadow p-4 flex justify-between items-center gap-8 line-through bg-black/10">
+      <div class="flex items-center gap-2">
+        <mat-checkbox class="example-margin" [checked]="task.completed"
+          (change)="taskService.editTask(task.id, {completed:!task.completed})" />
+        <div class="flex flex-col gap-1 overflow-hidden">
+          <span class="text-ellipsis overflow-hidden">{{task.title}}</span>
+          @if(task.description) {
+          <span class="text-xs text-ellipsis overflow-hidden">{{task.description}}</span>
+          }
+        </div>
+      </div>
+      <div class="shrink-0 space-x-2">
+        <mat-icon aria-hidden="false" aria-label="Edit task" fontIcon="edit"
+          (click)="openEditTaskDialog(task.id, task.title, task.description)"></mat-icon>
+        <button (click)="taskService.deleteTask(task.id)">
+          <mat-icon aria-hidden="false" aria-label="Delete task" fontIcon="delete" class="!text-red-500"></mat-icon>
+        </button>
+      </div>
     </div>
-  </div>
-  }
+    }
+  </section>
 </section>

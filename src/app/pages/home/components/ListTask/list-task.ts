@@ -2,13 +2,14 @@ import { Component, inject } from '@angular/core';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { TaskService } from '../../../../services/task.service';
 import { EditTaskDialogComponent } from '../EditTaskDialog/edit-task-dialog';
 
 @Component({
   selector: 'list-task',
-  imports: [MatIconModule],
+  imports: [MatIconModule, MatCheckboxModule],
   templateUrl: './list-task.html',
 })
 export class ListTaskComponent {

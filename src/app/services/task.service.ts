@@ -33,4 +33,12 @@ export class TaskService {
 
     this.tasks.splice(taskIndex, 1, { ...this.tasks[taskIndex], ...data });
   }
+
+  getCompletedTasks() {
+    return this.tasks.filter((task) => task.completed);
+  }
+
+  getPendingTasks() {
+    return this.tasks.filter((task) => !task.completed);
+  }
 }
