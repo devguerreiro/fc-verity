@@ -6,12 +6,12 @@
     } @else {
     @for(task of taskService.pendingTasks(); track task.id) {
     <div class="bg-white rounded shadow p-4 flex justify-between items-center gap-8">
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2 overflow-hidden">
         <mat-checkbox class="example-margin" [checked]="task.completed" (change)="completeTask(task)" />
         <div class="flex flex-col gap-1 overflow-hidden">
-          <span class="text-ellipsis overflow-hidden">{{task.title}}</span>
+          <span class="text-ellipsis overflow-hidden whitespace-nowrap">{{task.title}}</span>
           @if(task.description) {
-          <span class="text-xs text-ellipsis overflow-hidden">{{task.description}}</span>
+          <span class="text-xs text-ellipsis overflow-hidden whitespace-nowrap">{{task.description}}</span>
           }
         </div>
       </div>
@@ -34,12 +34,12 @@
     } @else {
     @for(task of taskService.completedTasks(); track task.id) {
     <div class="rounded shadow p-4 flex justify-between items-center gap-8 line-through bg-black/10">
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2 overflow-hidden">
         <mat-checkbox class="example-margin" [checked]="task.completed" (change)="incompleteTask(task)" />
         <div class="flex flex-col gap-1 overflow-hidden">
-          <span class="text-ellipsis overflow-hidden">{{task.title}}</span>
+          <span class="text-ellipsis overflow-hidden whitespace-nowrap">{{task.title}}</span>
           @if(task.description) {
-          <span class="text-xs text-ellipsis overflow-hidden">{{task.description}}</span>
+          <span class="text-xs text-ellipsis overflow-hidden whitespace-nowrap">{{task.description}}</span>
           }
         </div>
       </div>
