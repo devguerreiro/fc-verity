@@ -28,25 +28,15 @@ export class TaskService {
   );
 
   getTasks() {
-    return this.httpClient.get<Task[]>(`${environment.apiUrl}/tasks`);
+    return this.httpClient.get<Task[]>(`${environment.apiUrl}/task`);
   }
 
   addTask(title: string, description?: string) {
-    this.tasks().push({
-      id: this.tasks().length,
-      title,
-      description,
-      completed: false,
-    });
-  }
-
-  deleteTask(id: number) {
     this.httpClient
-      .delete<Task>(`${environment.apiUrl}/tasks/${id}`)
-      .subscribe(() => {
+      .post<Task>(`${environment.apiUrl}/task/`, { title, description })
+      .subscribe((task) => {
         this.tasks.update((tasks) => {
-          const taskIndex = this.tasks().findIndex((t) => t.id === id);
-          tasks.splice(taskIndex, 1);
+          tasks.push(task);
           return [...tasks];
         });
       });
@@ -54,11 +44,23 @@ export class TaskService {
 
   editTask(id: number, data: Omit<Task, 'id'>) {
     this.httpClient
-      .put<Task>(`${environment.apiUrl}/tasks/${id}`, data)
+      .put<Task>(`${environment.apiUrl}/task/${id}`, data)
       .subscribe((task) => {
         this.tasks.update((tasks) => {
           const taskIndex = this.tasks().findIndex((t) => t.id === id);
           tasks[taskIndex] = task;
+          return [...tasks];
+        });
+      });
+  }
+
+  deleteTask(id: number) {
+    this.httpClient
+      .delete<Task>(`${environment.apiUrl}/task/${id}`)
+      .subscribe(() => {
+        this.tasks.update((tasks) => {
+          const taskIndex = this.tasks().findIndex((t) => t.id === id);
+          tasks.splice(taskIndex, 1);
           return [...tasks];
         });
       });
