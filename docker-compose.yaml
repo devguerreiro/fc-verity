@@ -13,12 +13,4 @@ services:
       - /app/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true # Needed for file watching inside Docker
-      - API_URL=back
-    networks:
-      - verity
     command: npm start
-
-networks:
-  verity:
-    name: bc-verity_verity
-    external: true
