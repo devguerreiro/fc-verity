@@ -1,5 +1,5 @@
-import { HttpClient } from '@angular/common/http';
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { inject, Injectable, signal } from '@angular/core';
 
 import { environment } from '../../environment';
 
@@ -10,25 +10,41 @@ export type Task = {
   completed: boolean;
 };
 
+type PaginatedData<T> = {
+  page: number;
+  page_size: number;
+  results: T[];
+  total: number;
+};
+
 @Injectable({
   providedIn: 'root',
 })
 export class TaskService {
   httpClient = inject(HttpClient);
 
-  tasks = signal<Task[]>([]);
+  tasks = signal<PaginatedData<Task>>({
+    page: 1,
+    page_size: 10,
+    results: [],
+    total: 0,
+  });
 
   constructor() {
-    this.getTasks().subscribe((tasks) => this.tasks.set(tasks));
+    this.getTasks().subscribe((data) => this.tasks.set(data));
   }
 
-  pendingTasks = computed(() => this.tasks().filter((task) => !task.completed));
-  completedTasks = computed(() =>
-    this.tasks().filter((task) => task.completed)
-  );
-
-  getTasks() {
-    return this.httpClient.get<Task[]>(`${environment.apiUrl}/task`);
+  getTasks(page?: number, pageSize?: number) {
+    return this.httpClient.get<PaginatedData<Task>>(
+      `${environment.apiUrl}/task`,
+      page && pageSize
+        ? {
+            params: new HttpParams()
+              .set('page', page.toString())
+              .set('page_size', pageSize.toString()),
+          }
+        : {}
+    );
   }
 
   addTask(title: string, description?: string) {
@@ -36,8 +52,12 @@ export class TaskService {
       .post<Task>(`${environment.apiUrl}/task/`, { title, description })
       .subscribe((task) => {
         this.tasks.update((tasks) => {
-          tasks.push(task);
-          return [...tasks];
+          tasks.results.push(task);
+          return {
+            ...tasks,
+            total: tasks.total + 1,
+            results: [...tasks.results],
+          };
         });
       });
   }
@@ -47,9 +67,12 @@ export class TaskService {
       .put<Task>(`${environment.apiUrl}/task/${id}`, data)
       .subscribe((task) => {
         this.tasks.update((tasks) => {
-          const taskIndex = this.tasks().findIndex((t) => t.id === id);
-          tasks[taskIndex] = task;
-          return [...tasks];
+          const taskIndex = tasks.results.findIndex((t) => t.id === id);
+          tasks.results[taskIndex] = task;
+          return {
+            ...tasks,
+            results: [...tasks.results],
+          };
         });
       });
   }
@@ -59,9 +82,13 @@ export class TaskService {
       .delete<Task>(`${environment.apiUrl}/task/${id}`)
       .subscribe(() => {
         this.tasks.update((tasks) => {
-          const taskIndex = this.tasks().findIndex((t) => t.id === id);
-          tasks.splice(taskIndex, 1);
-          return [...tasks];
+          const taskIndex = tasks.results.findIndex((t) => t.id === id);
+          tasks.results.splice(taskIndex, 1);
+          return {
+            ...tasks,
+            total: tasks.total - 1,
+            results: [...tasks.results],
+          };
         });
       });
   }

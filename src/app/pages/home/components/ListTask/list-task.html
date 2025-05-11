@@ -1,57 +1,29 @@
 <section class="space-y-8">
-  <section class="space-y-4">
-    <h2 class="font-medium">Pending Tasks</h2>
-    @if(taskService.pendingTasks().length === 0) {
-    <p>No pending tasks</p>
-    } @else {
-    @for(task of taskService.pendingTasks(); track task.id) {
-    <div class="bg-white rounded shadow p-4 flex justify-between items-center gap-8">
-      <div class="flex items-center gap-2 overflow-hidden">
-        <mat-checkbox class="example-margin" [checked]="task.completed" (change)="completeTask(task)" />
-        <div class="flex flex-col gap-1 overflow-hidden">
-          <span class="text-ellipsis overflow-hidden whitespace-nowrap">{{task.title}}</span>
-          @if(task.description) {
-          <span class="text-xs text-ellipsis overflow-hidden whitespace-nowrap">{{task.description}}</span>
-          }
-        </div>
-      </div>
-      <div class="shrink-0 space-x-2">
-        <mat-icon aria-hidden="false" aria-label="Edit task" fontIcon="edit"
-          (click)="openEditTaskDialog(task)"></mat-icon>
-        <button (click)="taskService.deleteTask(task.id)">
-          <mat-icon aria-hidden="false" aria-label="Delete task" fontIcon="delete" class="!text-red-500"></mat-icon>
-        </button>
+  <h2 class="font-medium">Tasks</h2>
+  @if(taskService.tasks().total === 0) {
+  <p>No tasks</p>
+  } @else {
+  @for(task of taskService.tasks().results; track task.id) {
+  <div class="bg-white rounded shadow p-4 flex justify-between items-center gap-8">
+    <div class="flex items-center gap-2 overflow-hidden">
+      <mat-checkbox class="example-margin" [checked]="task.completed" (change)="changeTaskCompleted(task)" />
+      <div class="flex flex-col gap-1 overflow-hidden" [ngClass]="{'line-through': task.completed}">
+        <span class="text-ellipsis overflow-hidden whitespace-nowrap">{{task.title}}</span>
+        @if(task.description) {
+        <span class="text-xs text-ellipsis overflow-hidden whitespace-nowrap">{{task.description}}</span>
+        }
       </div>
     </div>
-    }
-    }
-  </section>
-  <hr />
-  <section class="space-y-4">
-    <h2 class="font-medium">Completed Tasks</h2>
-    @if(taskService.completedTasks().length === 0) {
-    <p>No completed tasks</p>
-    } @else {
-    @for(task of taskService.completedTasks(); track task.id) {
-    <div class="rounded shadow p-4 flex justify-between items-center gap-8 line-through bg-black/10">
-      <div class="flex items-center gap-2 overflow-hidden">
-        <mat-checkbox class="example-margin" [checked]="task.completed" (change)="incompleteTask(task)" />
-        <div class="flex flex-col gap-1 overflow-hidden">
-          <span class="text-ellipsis overflow-hidden whitespace-nowrap">{{task.title}}</span>
-          @if(task.description) {
-          <span class="text-xs text-ellipsis overflow-hidden whitespace-nowrap">{{task.description}}</span>
-          }
-        </div>
-      </div>
-      <div class="shrink-0 space-x-2">
-        <mat-icon aria-hidden="false" aria-label="Edit task" fontIcon="edit"
-          (click)="openEditTaskDialog(task)"></mat-icon>
-        <button (click)="taskService.deleteTask(task.id)">
-          <mat-icon aria-hidden="false" aria-label="Delete task" fontIcon="delete" class="!text-red-500"></mat-icon>
-        </button>
-      </div>
+    <div class="shrink-0 space-x-2">
+      <mat-icon aria-hidden="false" aria-label="Edit task" fontIcon="edit" (click)="openEditTaskDialog(task)"
+        class="cursor-pointer"></mat-icon>
+      <mat-icon aria-hidden="false" aria-label="Delete task" fontIcon="delete" class="!text-red-500 cursor-pointer"
+        (click)="taskService.deleteTask(task.id)"></mat-icon>
     </div>
-    }
-    }
-  </section>
+  </div>
+  }
+  <mat-paginator [length]="taskService.tasks().total" [pageSize]="taskService.tasks().page_size"
+    [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page" (page)="onPageChange($event)">
+  </mat-paginator>
+  }
 </section>
