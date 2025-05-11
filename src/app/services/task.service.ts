@@ -1,4 +1,8 @@
-import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { computed, inject, Injectable } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+
+import { environment } from '../../environment';
 
 type Task = {
   id: number;
@@ -11,11 +15,22 @@ type Task = {
   providedIn: 'root',
 })
 export class TaskService {
-  tasks = [] as Task[];
+  httpClient = inject(HttpClient);
+
+  tasks = toSignal(this.getTasks(), { initialValue: [] });
+
+  pendingTasks = computed(() => this.tasks().filter((task) => !task.completed));
+  completedTasks = computed(() =>
+    this.tasks().filter((task) => task.completed)
+  );
+
+  getTasks() {
+    return this.httpClient.get<Task[]>(`${environment.apiUrl}/tasks`);
+  }
 
   addTask(title: string, description?: string) {
-    this.tasks.push({
-      id: this.tasks.length,
+    this.tasks().push({
+      id: this.tasks().length,
       title,
       description,
       completed: false,
@@ -23,22 +38,14 @@ export class TaskService {
   }
 
   deleteTask(id: number) {
-    const taskIndex = this.tasks.findIndex((task) => task.id === id);
+    const taskIndex = this.tasks().findIndex((task) => task.id === id);
 
-    this.tasks.splice(taskIndex, 1);
+    this.tasks().splice(taskIndex, 1);
   }
 
   editTask(id: number, data: Partial<Task>) {
-    const taskIndex = this.tasks.findIndex((task) => task.id === id);
+    const taskIndex = this.tasks().findIndex((task) => task.id === id);
 
-    this.tasks.splice(taskIndex, 1, { ...this.tasks[taskIndex], ...data });
-  }
-
-  getCompletedTasks() {
-    return this.tasks.filter((task) => task.completed);
-  }
-
-  getPendingTasks() {
-    return this.tasks.filter((task) => !task.completed);
+    this.tasks().splice(taskIndex, 1, { ...this.tasks()[taskIndex], ...data });
   }
 }
