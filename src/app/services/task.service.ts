@@ -41,8 +41,15 @@ export class TaskService {
   }
 
   deleteTask(id: number) {
-    const taskIndex = this.tasks().findIndex((task) => task.id === id);
-    this.tasks().splice(taskIndex, 1);
+    this.httpClient
+      .delete<Task>(`${environment.apiUrl}/tasks/${id}`)
+      .subscribe(() => {
+        this.tasks.update((tasks) => {
+          const taskIndex = this.tasks().findIndex((t) => t.id === id);
+          tasks.splice(taskIndex, 1);
+          return [...tasks];
+        });
+      });
   }
 
   editTask(id: number, data: Omit<Task, 'id'>) {
