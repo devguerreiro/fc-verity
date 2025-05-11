@@ -7,8 +7,7 @@
     @for(task of taskService.pendingTasks(); track task.id) {
     <div class="bg-white rounded shadow p-4 flex justify-between items-center gap-8">
       <div class="flex items-center gap-2">
-        <mat-checkbox class="example-margin" [checked]="task.completed"
-          (change)="taskService.editTask(task.id, {completed:!task.completed})" />
+        <mat-checkbox class="example-margin" [checked]="task.completed" (change)="completeTask(task)" />
         <div class="flex flex-col gap-1 overflow-hidden">
           <span class="text-ellipsis overflow-hidden">{{task.title}}</span>
           @if(task.description) {
@@ -36,8 +35,7 @@
     @for(task of taskService.completedTasks(); track task.id) {
     <div class="rounded shadow p-4 flex justify-between items-center gap-8 line-through bg-black/10">
       <div class="flex items-center gap-2">
-        <mat-checkbox class="example-margin" [checked]="task.completed"
-          (change)="taskService.editTask(task.id, {completed:!task.completed})" />
+        <mat-checkbox class="example-margin" [checked]="task.completed" (change)="incompleteTask(task)" />
         <div class="flex flex-col gap-1 overflow-hidden">
           <span class="text-ellipsis overflow-hidden">{{task.title}}</span>
           @if(task.description) {

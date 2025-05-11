@@ -4,7 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
-import { TaskService } from '../../../../services/task.service';
+import { Task, TaskService } from '../../../../services/task.service';
 import { EditTaskDialogComponent } from '../EditTaskDialog/edit-task-dialog';
 
 @Component({
@@ -25,6 +25,20 @@ export class ListTaskComponent {
         title,
         description,
       },
+    });
+  }
+
+  completeTask(task: Task) {
+    this.taskService.editTask(task.id, {
+      ...task,
+      completed: true,
+    });
+  }
+
+  incompleteTask(task: Task) {
+    this.taskService.editTask(task.id, {
+      ...task,
+      completed: false,
     });
   }
 }
